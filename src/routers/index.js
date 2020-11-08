@@ -4,6 +4,7 @@ import SplashScreen from '../screens/Splash';
 import { useSelector } from 'react-redux';
 import authStack from './AuthStack';
 import mainStack from './MainStack';
+import drawer from './DrawerNavigator';
 
 export default function RootRouter() {
     const { restoring, isLoggedIn } = useSelector((store) => ({
@@ -13,7 +14,7 @@ export default function RootRouter() {
 
     return (
         <NavigationContainer>
-            {restoring ? <SplashScreen /> : !isLoggedIn ? authStack() : mainStack()}
+            {restoring ? <SplashScreen /> : !isLoggedIn ? authStack() : drawer()}
         </NavigationContainer>
     );
 }
