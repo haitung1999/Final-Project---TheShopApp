@@ -1,5 +1,6 @@
 import PRODUCTS from '../../data/product';
 import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../products/action';
+import Product from '../../data/products';
 
 const initialState = {
     availableProducts: PRODUCTS,

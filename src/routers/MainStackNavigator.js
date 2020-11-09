@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
+import EditProductScreen from '../screens/user/EditProductScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 import CartScreen from '../screens/shop/CartScreen';
 
@@ -144,6 +145,25 @@ const UserStackNavigator = () => {
                                     onPress={() => {
                                         navigation.navigate('EditProduct');
                                     }}
+                                />
+                            </HeaderButtons>
+                        )
+                    }
+                }}
+            />
+            <UserStack.Screen
+                name="EditProduct"
+                component={EditProductScreen}
+                options={({ route }) => {
+                    const submitFn = route.params?.submit
+                    return {
+                        headerTitle: route.params?.productId ? 'Edit Product' : 'Add Product',
+                        headerRight: () => (
+                            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                                <Item
+                                    title="Save"
+                                    iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
+                                    onPress={submitFn}
                                 />
                             </HeaderButtons>
                         )

@@ -7,14 +7,18 @@ import {
     StyleSheet,
     Platform
 } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
-import HeaderButton from '../../components/UI/HeaderButton';
-import * as productsActions from '../../store/actions/products';
+import { CommonActions } from '@react-navigation/native';
+import { createProduct, updateProduct } from '../../redux/products/action';
+import { LogBox } from 'react-native';
 
-const EditProductScreen = props => {
-    const prodId = props.navigation.getParam('productId');
+LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+]);
+
+const EditProductScreen = ({ navigation, route }) => {
+    const prodId = route.params?.productId;
     const editedProduct = useSelector(state =>
         state.products.userProducts.find(prod => prod.id === prodId)
     );
@@ -32,18 +36,18 @@ const EditProductScreen = props => {
     const submitHandler = useCallback(() => {
         if (editedProduct) {
             dispatch(
-                productsActions.updateProduct(prodId, title, description, imageUrl)
+                updateProduct(prodId, title, description, imageUrl)
             );
         } else {
             dispatch(
-                productsActions.createProduct(title, description, imageUrl, +price)
+                createProduct(title, description, imageUrl, +price)
             );
         }
-        props.navigation.goBack();
+        navigation.goBack();
     }, [dispatch, prodId, title, description, imageUrl, price]);
 
     useEffect(() => {
-        props.navigation.setParams({ submit: submitHandler });
+        navigation.dispatch(CommonActions.setParams({ submit: submitHandler }));
     }, [submitHandler]);
 
     return (
@@ -86,26 +90,6 @@ const EditProductScreen = props => {
             </View>
         </ScrollView>
     );
-};
-
-EditProductScreen.navigationOptions = navData => {
-    const submitFn = navData.navigation.getParam('submit');
-    return {
-        headerTitle: navData.navigation.getParam('productId')
-            ? 'Edit Product'
-            : 'Add Product',
-        headerRight: (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName={
-                        Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'
-                    }
-                    onPress={submitFn}
-                />
-            </HeaderButtons>
-        )
-    };
 };
 
 const styles = StyleSheet.create({

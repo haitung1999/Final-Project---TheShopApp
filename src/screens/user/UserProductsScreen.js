@@ -1,13 +1,33 @@
 import React from 'react'
-import { Button, FlatList } from 'react-native'
+import { Button, FlatList, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem';
 import Colors from '../../constants/Colors';
 import { deleteProduct } from '../../redux/products/action';
 
-const UserProductsScreen = () => {
+const UserProductsScreen = props => {
     const userProducts = useSelector(state => state.products.userProducts);
     const dispatch = useDispatch();
+
+    const editProductHandler = id => {
+        props.navigation.navigate('EditProduct', { productId: id });
+    }
+
+    const deleteHandler = (id) => {
+        Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
+            {
+                text: 'No',
+                style: 'default'
+            },
+            {
+                text: 'Yes',
+                style: 'destructive',
+                onPress: () => {
+                    dispatch(deleteProduct(id));
+                }
+            }
+        ])
+    }
 
     return (
         <FlatList
@@ -18,18 +38,20 @@ const UserProductsScreen = () => {
                     image={itemData.item.imageUrl}
                     title={itemData.item.title}
                     price={itemData.item.price}
-                    onSelect={() => { }}
+                    onSelect={() => {
+                        editProductHandler(itemData.item.id);
+                    }}
                 >
                     <Button
                         color={Colors.primary}
                         title="Edit"
-                        onPress={() => { }} />
+                        onPress={() => {
+                            editProductHandler(itemData.item.id);
+                        }} />
                     <Button
                         color={Colors.primary}
                         title="Delete"
-                        onPress={() => {
-                            dispatch(deleteProduct(itemData.item.id));
-                        }}
+                        onPress={deleteHandler.bind(this, itemData.item.id)}
                     />
                 </ProductItem>
             )}
@@ -38,6 +60,6 @@ const UserProductsScreen = () => {
 }
 
 
-export default UserProductsScreen
+export default UserProductsScreen;
 
 
