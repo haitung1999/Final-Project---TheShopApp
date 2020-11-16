@@ -155,19 +155,10 @@ const UserStackNavigator = () => {
                 name="EditProduct"
                 component={EditProductScreen}
                 options={({ route }) => {
-                    const submitFn = route.params?.submit
+                    const routeParams = route.params ? route.params : {};
                     return {
-                        headerTitle: route.params?.productId ? 'Edit Product' : 'Add Product',
-                        headerRight: () => (
-                            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-                                <Item
-                                    title="Save"
-                                    iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
-                                    onPress={submitFn}
-                                />
-                            </HeaderButtons>
-                        )
-                    }
+                        headerTitle: routeParams.productId ? 'Edit Product' : 'Add Product'
+                    };
                 }}
             />
         </UserStack.Navigator>

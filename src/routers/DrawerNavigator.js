@@ -5,6 +5,8 @@ import { MainStackNavigator } from './MainStackNavigator';
 import { OrderStackNavigator } from './MainStackNavigator';
 import { UserStackNavigator } from './MainStackNavigator';
 
+import AccountScreen from '../screens/Account';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Drawer = createDrawerNavigator();
@@ -53,6 +55,10 @@ const drawer = () => {
                         />
                     )
                 }}
+            />
+            <Drawer.Screen
+                name="Profile"
+                component={AccountScreen}
             />
         </Drawer.Navigator>
     );

@@ -1,71 +1,90 @@
-import React, { useState } from 'react'
+import React, { useReducer, useState, useEffect, useCallback } from 'react'
 import { StyleSheet, Text, View, Keyboard, TouchableOpacity, Alert, ScrollView, ToastAndroid, Platform, SafeAreaView, Image } from 'react-native'
 import LoginButton from './LoginButton';
 import CustomTextInput from '../../components/UI/CustomTextInput';
 import { IMAGES } from '../../assets/image/index';
 import COLORS from '../../assets/colors';
-import { setLoggedIn } from '../../redux/auth/action';
+import { login } from '../../redux/auth/action';
 import { useDispatch } from 'react-redux'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const SignInScreen = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+const formReducer = (state, action) => {
+    if (action.type === FORM_INPUT_UPDATE) {
+        const updatedValues = {
+            ...state.inputValues,
+            [action.input]: action.value
+        }
+        return {
+            inputValues: updatedValues
+        }
+    }
+}
+
+
+const SignInScreen = ({ navigation }) => {
+    const [isSignIn, setIsSignIn] = useState(false)
+    const [error, setError] = useState();
+    const [showLoading, setShowLoading] = useState(false);
+
     const dispatch = useDispatch()
 
-    const showAlert = (title, message, onPossitivePress) => {
-        Alert.alert(
-            title,
-            message,
-            [
-                {
-                    text: 'OK',
-                    onPress: onPossitivePress
-                }
-            ],
-            { cancelable: true }
-        );
-    }
-
-    const onLoginPress = () => {
-
-        if (email.localeCompare('1') != 0) {
-            showAlert("Login failed", 'Invalid email. Please try agian!')
-            return;
+    const [formState] = useReducer(formReducer, {
+        inputValues: {
+            email: '',
+            password: ''
         }
+    })
 
-        if (password.localeCompare('1') != 0) {
-            showAlert("Login failed", 'Invalid password. Please try again!')
-            return;
+    useEffect(() => {
+        if (error) {
+            Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
         }
+    }, [error]);
 
-        Keyboard.dismiss()
-        const successfullyMes = "Login successfully"
-        if (Platform.OS === 'ios') {
-            showAlert("", successfullyMes, () => {
-                dispatch(setLoggedIn(true))
-            })
-        } else {
-            ToastAndroid.show(successfullyMes, ToastAndroid.SHORT)
-            dispatch(setLoggedIn(true))
+    const onLoginPress = async () => {
+        let action;
+        if (isSignIn) {
+            action = login(
+                formState.inputValues.email,
+                formState.inputValues.password
+            )
+            setError(null);
+            setShowLoading(true);
+            try {
+                await dispatch(action);
+            } catch (err) {
+                setError(err.message);
+                setShowLoading(false)
+            }
         }
-    }
+    };
+
+    const inputChangeHandler = useCallback(
+        (inputValue) => ({
+            type: FORM_INPUT_UPDATE,
+            value: inputValue,
+        })
+    )
 
     return (
         <SafeAreaView style={styles.container} >
             <ScrollView style={{ padding: 24 }} keyboardShouldPersistTaps='handled'>
                 <Image source={IMAGES.ic_vigreen} style={styles.header} />
                 <CustomTextInput
-                    title="Email ID"
+                    iconType="user"
+                    autoCapitalize="none"
                     placeholder="Email or phone number"
-                    onChangeText={(text) => setEmail(text)}
+                    onChangeText={inputChangeHandler}
                 />
 
                 <CustomTextInput
-                    title="Password"
+                    iconType="lock"
+                    autoCapitalize="none"
                     placeholder="Enter your password here!"
                     secureTextEntry
-                    onChangeText={(text) => setPassword(text)}
+                    onChangeText={inputChangeHandler}
                 />
 
                 <View style={styles.forgotContainer}>
@@ -96,7 +115,7 @@ const SignInScreen = () => {
 
                 <View style={styles.signUp}>
                     <Text>Not yet a member?</Text>
-                    <TouchableOpacity style={{ marginStart: 4 }}>
+                    <TouchableOpacity style={{ marginStart: 4 }} onPress={() => { navigation.navigate('Sign Up') }}>
                         <Text style={{ color: "orange", fontWeight: "bold" }} >Sign Up</Text>
                     </TouchableOpacity>
                 </View>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, FlatList, Alert } from 'react-native'
+import { Button, FlatList, Alert, View, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem';
 import Colors from '../../constants/Colors';
@@ -7,6 +7,7 @@ import { deleteProduct } from '../../redux/products/action';
 
 const UserProductsScreen = props => {
     const userProducts = useSelector(state => state.products.userProducts);
+
     const dispatch = useDispatch();
 
     const editProductHandler = id => {
@@ -27,6 +28,14 @@ const UserProductsScreen = props => {
                 }
             }
         ])
+    }
+
+    if (userProducts.length === 0) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>No products found, maybe start creating some?</Text>
+            </View>
+        );
     }
 
     return (

@@ -1,7 +1,12 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-export default function SplashScreen() {
+const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Authentication')
+    }, 3000)
+  }, [])
   return (
     <View style={styles.container}>
       <Text>Loading...</Text>
@@ -16,3 +21,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default SplashScreen;

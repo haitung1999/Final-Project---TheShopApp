@@ -5,7 +5,6 @@ import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Colors from '../constants/Colors';
 
 const Drawer = createDrawerNavigator();
 

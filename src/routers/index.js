@@ -3,18 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from '../screens/Splash';
 import { useSelector } from 'react-redux';
 import authStack from './AuthStack';
-import mainStack from './MainStack';
 import drawer from './DrawerNavigator';
 
 export default function RootRouter() {
-    const { restoring, isLoggedIn } = useSelector((store) => ({
-        restoring: store.auth.restoring,
-        isLoggedIn: store.auth.isLoggedIn,
-    }));
+    const isAuth = useSelector(state => !!state.auth.token);
+    const didTryAutoLogin = useSelector(state => state.auth.didTryAutoLogin);
 
     return (
         <NavigationContainer>
-            {restoring ? <SplashScreen /> : !isLoggedIn ? authStack() : drawer()}
+            {!isAuth ? authStack() : drawer()}
         </NavigationContainer>
     );
 }

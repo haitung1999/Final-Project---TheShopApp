@@ -1,8 +1,10 @@
-import { SET_LOGGED_IN } from './action';
+import { AUTHENTICATE, LOGOUT, SET_DID_TRY_AL } from './action';
 import { REHYDRATE } from 'redux-persist';
 
 const initialState = {
-  isLoggedIn: false,
+  token: null,
+  userId: null,
+  didTryAutoLogin: false,
   restoring: true,
 };
 
@@ -17,10 +19,21 @@ const auth = (state = initialState, action) => {
         restoring: false,
       };
     }
-    case SET_LOGGED_IN:
+    case AUTHENTICATE:
+      return {
+        token: action.token,
+        userId: action.userId,
+        didTryAutoLogin: true
+      };
+    case SET_DID_TRY_AL:
       return {
         ...state,
-        isLoggedIn: action.isLoggedIn,
+        didTryAutoLogin: true
+      };
+    case LOGOUT:
+      return {
+        ...initialState,
+        didTryAutoLogin: true
       };
     default:
       return state;

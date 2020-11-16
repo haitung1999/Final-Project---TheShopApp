@@ -1,11 +1,11 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { setLoggedIn } from '../../redux/auth/action';
+import { logout } from '../../redux/auth/action';
 import { useDispatch } from 'react-redux'
 
 export default function AccountScreen() {
     const dispatch = useDispatch();
-    
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header} />
@@ -18,7 +18,7 @@ export default function AccountScreen() {
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.logoutButton} onPress={() => dispatch(setLoggedIn(false))}>
+                    <TouchableOpacity style={styles.logoutButton} onPress={() => dispatch(logout())}>
                         <Text style={styles.logoutText}>Sign Out</Text>
                     </TouchableOpacity>
                 </View>

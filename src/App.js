@@ -4,7 +4,9 @@ import RootRouter from './routers';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import redux from './redux';
-import ProductsOverviewScreen from './screens/shop/ProductsOverviewScreen';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs()
 
 const App = () => {
   return (
